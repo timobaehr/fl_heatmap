@@ -10,25 +10,38 @@ class Heatmap extends StatefulWidget {
 }
 
 class _HeatmapState extends State<Heatmap> {
-  final GlobalKey _paintKey = GlobalKey();
-  Offset? _offset;
+  int? _selectedIndex;
 
   @override
   Widget build(BuildContext context) {
+    const double marginTop = 10;
+    const double marginLeft = 10;
+    const double sizeOfRect = 20;
+    const double margin = 4;
+
+    final List<Rect> rects = [
+      for (int i = 0; i < 12; i++)
+        Rect.fromLTWH(marginLeft + sizeOfRect * i + margin * i, marginTop,
+            sizeOfRect, sizeOfRect),
+    ];
+
     return Listener(
       onPointerDown: (PointerDownEvent event) {
-        final RenderBox? referenceBox =
-            _paintKey.currentContext?.findRenderObject() as RenderBox?;
-        final Offset? offset = referenceBox?.globalToLocal(event.position);
-        if (offset != null) {
-          setState(() {
-            _offset = offset;
-          });
-        }
+        /// find the clicked cell
+        final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+        final Offset offset = referenceBox.globalToLocal(event.position);
+        final index = rects.lastIndexWhere((rect) => rect.contains(offset));
+
+        setState(() {
+          _selectedIndex = index;
+        });
       },
       child: CustomPaint(
-          key: _paintKey,
-          painter: HeatmapPainter(offset: _offset ?? const Offset(0, 0)),
+          painter: HeatmapPainter(
+            /// Needs all clickable childs as argument
+            rects: rects,
+            selectedIndex: _selectedIndex,
+          ),
           child: ConstrainedBox(
             constraints: const BoxConstraints.expand(),
           )),

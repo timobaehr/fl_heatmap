@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 class HeatmapPainter extends CustomPainter {
-  HeatmapPainter({Offset offset = const Offset(0, 0)}) : _offset = offset;
+  HeatmapPainter({required this.rects, required this.selectedIndex});
 
-  final Offset _offset;
+  final List<Rect> rects;
+
+  final int? selectedIndex;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -40,9 +42,13 @@ class HeatmapPainter extends CustomPainter {
     ///    [ImageInfo.image] object, applying the [ImageInfo.scale] value to
     ///    obtain the correct rendering size.
 
-    final paint = Paint()..color = Colors.yellow;
-    final rect = _offset & const Size(16, 16);
-    canvas.drawRect(rect, paint);
+    final paintNotSelected = Paint()..color = Colors.green;
+    final paintSelected = Paint()..color = Colors.red;
+    var i = 0;
+    for (final rect in rects) {
+      canvas.drawRect(
+          rect, i++ == selectedIndex ? paintSelected : paintNotSelected);
+    }
   }
 
   @override
@@ -72,6 +78,6 @@ class HeatmapPainter extends CustomPainter {
     /// [RenderObject.isRepaintBoundary] set to true) might be helpful.
     ///
     /// The `oldDelegate` argument will never be null.
-    return oldDelegate._offset != _offset;
+    return oldDelegate.selectedIndex != selectedIndex;
   }
 }
