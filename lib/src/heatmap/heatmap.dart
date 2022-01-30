@@ -51,20 +51,23 @@ class _HeatmapState extends State<Heatmap> {
       final fullHeight = constraints.maxHeight;
       // (428 - 10 - 10)/12 = 34
 
+      final int rows = widget.heatmapData.rows.length;
+      final int columns = widget.heatmapData.columns.length;
+
       const double marginTop = 10;
       const double marginLeft = 10;
       const double marginRight = 10;
       final double spaceForRects = fullWidth - marginLeft - marginRight;
-      final double spaceForRectWithMargins = (spaceForRects +
-              (spaceForRects / widget.heatmapData.columns.length * 0.15)) /
-          widget.heatmapData.columns.length;
+      final double spaceForRectWithMargins =
+          (spaceForRects + (spaceForRects / columns * 0.15)) /
+              widget.heatmapData.columns.length;
 
       final double sizeOfRect = spaceForRectWithMargins * 0.85;
       final double margin = spaceForRectWithMargins * 0.15;
 
       final List<Rect> rects = [
-        for (int row = 0; row < widget.heatmapData.rows.length; row++)
-          for (int col = 0; col < widget.heatmapData.columns.length; col++)
+        for (int row = 0; row < rows; row++)
+          for (int col = 0; col < columns; col++)
             Rect.fromLTWH(
                 marginLeft + sizeOfRect * col + margin * col,
                 marginTop + sizeOfRect * row + margin * row,
@@ -75,6 +78,7 @@ class _HeatmapState extends State<Heatmap> {
         for (final heatmapItem in widget.heatmapData.items)
           valueToColor(heatmapItem.value),
       ];
+      final usedHeight = marginTop + sizeOfRect * rows + margin * rows;
 
       final listener = Listener(
         onPointerDown: (PointerDownEvent event) {
@@ -103,7 +107,10 @@ class _HeatmapState extends State<Heatmap> {
               constraints: const BoxConstraints.expand(),
             )),
       );
-      return listener;
+      return SizedBox(
+        height: usedHeight,
+        child: listener,
+      );
     });
   }
 

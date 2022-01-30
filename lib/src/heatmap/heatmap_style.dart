@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // Material red 100, 200, ..., 800, 900
 const colorPaletteRed = [
-  Color(0xffBDBDBD), // 0
+  Color(0xffF5F5F5), // 0
   Color(0xffFFCDD2), // 100
   Color(0xffEF9A9A), // 200
   Color(0xffEF9A9A), // 300
@@ -16,7 +16,7 @@ const colorPaletteRed = [
 
 // Material green 100, 200, ..., 800, 900
 const colorPaletteGreen = [
-  Color(0xffBDBDBD), // 0
+  Color(0xffF5F5F5), // 0
   Color(0xffC8E6C9), // 100
   Color(0xffC5E1A5), // 200
   Color(0xffA5D6A7), // 300
@@ -30,7 +30,7 @@ const colorPaletteGreen = [
 
 // Material deep orange 100, 200, ..., 800, 900
 const colorPaletteBlue = [
-  Color(0xffBDBDBD), // 0
+  Color(0xffF5F5F5), // 0
   Color(0xffBBDEFB), // 100
   Color(0xff90CAF9), // 200
   Color(0xff64B5F6), // 300
@@ -44,7 +44,7 @@ const colorPaletteBlue = [
 
 // Material deep orange 100, 200, ..., 800, 900
 const colorPaletteDeepOrange = [
-  Color(0xffBDBDBD), // 0
+  Color(0xffF5F5F5), // 0
   Color(0xffFFCCBC), // 100
   Color(0xffFFAB91), // 200
   Color(0xffFF8A65), // 300
