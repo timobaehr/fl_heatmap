@@ -1,11 +1,23 @@
 import 'package:flutter/material.dart';
 
 class HeatmapPainter extends CustomPainter {
-  HeatmapPainter({required this.rects, required this.selectedIndex});
+  HeatmapPainter(
+      {required this.rects,
+      required this.rectColors,
+      required this.selectedIndex,
+      required this.selectedColor}) {
+    assert(rects.length == rectColors.length);
+  }
 
   final List<Rect> rects;
 
+  final List<Color> rectColors;
+
   final int? selectedIndex;
+
+  final Color selectedColor;
+
+  static const double selectedBorderThickness = 3;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -42,12 +54,24 @@ class HeatmapPainter extends CustomPainter {
     ///    [ImageInfo.image] object, applying the [ImageInfo.scale] value to
     ///    obtain the correct rendering size.
 
-    final paintNotSelected = Paint()..color = Colors.green;
-    final paintSelected = Paint()..color = Colors.red;
+    final paintSelected = Paint()..color = selectedColor;
     var i = 0;
     for (final rect in rects) {
-      canvas.drawRect(
-          rect, i++ == selectedIndex ? paintSelected : paintNotSelected);
+      if (i++ == selectedIndex && i < rectColors.length) {
+        final paint = Paint()..color = rectColors[i];
+        canvas.drawRect(rect, paintSelected);
+        canvas.drawRect(
+            Rect.fromLTWH(
+                rect.left + selectedBorderThickness,
+                rect.top + selectedBorderThickness,
+                rect.width - 2 * selectedBorderThickness,
+                rect.height - 2 * selectedBorderThickness),
+            paint);
+      } else {
+        final paint = Paint()
+          ..color = rectColors.length == i ? Colors.transparent : rectColors[i];
+        canvas.drawRect(rect, paint);
+      }
     }
   }
 

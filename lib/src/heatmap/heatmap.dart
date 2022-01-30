@@ -14,6 +14,28 @@ class Heatmap extends StatefulWidget {
 
 class _HeatmapState extends State<Heatmap> {
   int? _selectedIndex;
+  double min = 0;
+  double max = 0;
+
+  @override
+  void initState() {
+    /// First get min and max
+    double? min, max;
+    for (final item in widget.heatmapData.items) {
+      if (min == null || item.value < min) {
+        min = item.value;
+      }
+      if (max == null || item.value > max) {
+        max = item.value;
+      }
+    }
+    if (min != null && max != null) {
+      this.min = min;
+      this.max = max;
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +64,10 @@ class _HeatmapState extends State<Heatmap> {
                 sizeOfRect,
                 sizeOfRect),
       ];
+      final List<Color> rectColors = [
+        for (final heatmapItem in widget.heatmapData.items)
+          valueToColor(heatmapItem.value),
+      ];
 
       final listener = Listener(
         onPointerDown: (PointerDownEvent event) {
@@ -59,7 +85,9 @@ class _HeatmapState extends State<Heatmap> {
             painter: HeatmapPainter(
               /// Needs all clickable childs as argument
               rects: rects,
+              rectColors: rectColors,
               selectedIndex: _selectedIndex,
+              selectedColor: widget.heatmapData.selectedColor,
             ),
             child: ConstrainedBox(
               constraints: const BoxConstraints.expand(),
@@ -67,5 +95,24 @@ class _HeatmapState extends State<Heatmap> {
       );
       return listener;
     });
+  }
+
+  Color valueToColor(double value) {
+    final numberOfColorClasses = widget.heatmapData.colorPalette.length;
+
+    /// Create color classing starting and [min] to [max]
+    final diff = max - min;
+    final classSize = diff / numberOfColorClasses;
+
+    for (int i = 0; i < numberOfColorClasses; i++) {
+      if (value < classSize + (i * classSize)) {
+        print('value: $value -> ${widget.heatmapData.colorPalette[i]}');
+        return widget.heatmapData.colorPalette[i];
+      }
+    }
+
+    print(
+        'value: $value, min: $min, max: $max -> ${widget.heatmapData.colorPalette[0]}');
+    return widget.heatmapData.colorPalette.first;
   }
 }
