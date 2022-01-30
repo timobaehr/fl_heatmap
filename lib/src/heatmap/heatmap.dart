@@ -48,8 +48,6 @@ class _HeatmapState extends State<Heatmap> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final fullWidth = constraints.maxWidth;
-      final fullHeight = constraints.maxHeight;
-      // (428 - 10 - 10)/12 = 34
 
       final int rows = widget.heatmapData.rows.length;
       final int columns = widget.heatmapData.columns.length;
@@ -59,11 +57,10 @@ class _HeatmapState extends State<Heatmap> {
       const double marginRight = 10;
       final double spaceForRects = fullWidth - marginLeft - marginRight;
       final double spaceForRectWithMargins =
-          (spaceForRects + (spaceForRects / columns * 0.15)) /
-              widget.heatmapData.columns.length;
+          (spaceForRects + (spaceForRects / columns * 0.10)) / columns;
 
-      final double sizeOfRect = spaceForRectWithMargins * 0.85;
-      final double margin = spaceForRectWithMargins * 0.15;
+      final double sizeOfRect = spaceForRectWithMargins * 0.90;
+      final double margin = spaceForRectWithMargins * 0.10;
 
       final List<Rect> rects = [
         for (int row = 0; row < rows; row++)
@@ -122,8 +119,10 @@ class _HeatmapState extends State<Heatmap> {
     final classSize = diff / numberOfColorClasses;
 
     for (int i = 0; i < numberOfColorClasses; i++) {
-      if (value < classSize + (i * classSize)) {
+      if (value <= classSize + (i * classSize)) {
         return widget.heatmapData.colorPalette[i];
+      } else if (value > (classSize * i) && i == numberOfColorClasses - 1) {
+        return widget.heatmapData.colorPalette.last;
       }
     }
 

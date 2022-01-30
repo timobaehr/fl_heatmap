@@ -21,7 +21,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    const rows = ['2019', '2020', '2021', '2022'];
+    _initExampleData();
+    super.initState();
+  }
+
+  void _initExampleData() {
+    const rows = [
+      '2022',
+      '2021',
+      '2020',
+      '2019',
+    ];
     const columns = [
       'Jan',
       'Feb',
@@ -34,7 +44,7 @@ class _MyAppState extends State<MyApp> {
       'Sep',
       'Okt',
       'Nov',
-      'Dez'
+      'Dez',
     ];
     final r = Random();
     const String unit = 'kWh';
@@ -47,7 +57,6 @@ class _MyAppState extends State<MyApp> {
               xAxisLabel: columns[col],
               yAxisLabel: rows[row]),
     ]);
-    super.initState();
   }
 
   @override
