@@ -55,9 +55,9 @@ class HeatmapPainter extends CustomPainter {
     ///    obtain the correct rendering size.
 
     final paintSelected = Paint()..color = selectedColor;
-    var i = 0;
-    for (final rect in rects) {
-      if (i++ == selectedIndex && i < rectColors.length) {
+    for (int i = 0; i < rects.length; i++) {
+      final rect = rects[i];
+      if (i == selectedIndex) {
         final paint = Paint()..color = rectColors[i];
         canvas.drawRect(rect, paintSelected);
         canvas.drawRect(

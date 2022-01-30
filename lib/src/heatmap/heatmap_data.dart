@@ -10,8 +10,8 @@ class HeatmapData {
       this.selectedColor = Colors.red,
       this.colorPalette = colorPaletteGreen});
 
-  final int columns;
-  final int rows;
+  final List<String> columns;
+  final List<String> rows;
 
   /// The color palette is used to show the difference between the values.
   /// There should be at least 2 colors, otherwise the heatmap rects have all

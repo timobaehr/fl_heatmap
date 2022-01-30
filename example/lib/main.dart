@@ -45,16 +45,19 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Heatmap plugin example app'),
         ),
         body: Heatmap(
-            heatmapData:
-                HeatmapData(rows: rows.length, columns: columns.length, items: [
-          for (int row = 0; row < rows.length; row++)
-            for (int col = 0; col < columns.length; col++)
-              HeatmapItem(
-                  value: r.nextDouble() * 6,
-                  unit: unit,
-                  xAxisLabel: columns[col],
-                  yAxisLabel: rows[row]),
-        ])),
+            onItemSelectedListener: (HeatmapItem? selectedItem) {
+              debugPrint(
+                  'Item ${selectedItem?.yAxisLabel}/${selectedItem?.xAxisLabel} with value ${selectedItem?.value} selected');
+            },
+            heatmapData: HeatmapData(rows: rows, columns: columns, items: [
+              for (int row = 0; row < rows.length; row++)
+                for (int col = 0; col < columns.length; col++)
+                  HeatmapItem(
+                      value: r.nextDouble() * 6,
+                      unit: unit,
+                      xAxisLabel: columns[col],
+                      yAxisLabel: rows[row]),
+            ])),
       ),
     );
   }

@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 import 'heatmap_painter.dart';
 
 class Heatmap extends StatefulWidget {
-  const Heatmap({Key? key, required this.heatmapData}) : super(key: key);
+  const Heatmap(
+      {Key? key,
+      required this.heatmapData,
+      required this.onItemSelectedListener})
+      : super(key: key);
 
   final HeatmapData heatmapData;
+
+  /// [selectedItem] is null if item is unselected
+  final Function(HeatmapItem? selectedItem) onItemSelectedListener;
 
   @override
   _HeatmapState createState() => _HeatmapState();
@@ -49,17 +56,17 @@ class _HeatmapState extends State<Heatmap> {
       const double marginRight = 10;
       final double spaceForRects = fullWidth - marginLeft - marginRight;
       final double spaceForRectWithMargins = (spaceForRects +
-              (spaceForRects / widget.heatmapData.columns * 0.15)) /
-          widget.heatmapData.columns;
+              (spaceForRects / widget.heatmapData.columns.length * 0.15)) /
+          widget.heatmapData.columns.length;
 
       final double sizeOfRect = spaceForRectWithMargins * 0.85;
       final double margin = spaceForRectWithMargins * 0.15;
 
       final List<Rect> rects = [
-        for (int row = 0; row < widget.heatmapData.rows; row++)
-          for (int i = 0; i < widget.heatmapData.columns; i++)
+        for (int row = 0; row < widget.heatmapData.rows.length; row++)
+          for (int col = 0; col < widget.heatmapData.columns.length; col++)
             Rect.fromLTWH(
-                marginLeft + sizeOfRect * i + margin * i,
+                marginLeft + sizeOfRect * col + margin * col,
                 marginTop + sizeOfRect * row + margin * row,
                 sizeOfRect,
                 sizeOfRect),
@@ -77,6 +84,9 @@ class _HeatmapState extends State<Heatmap> {
           final Offset offset = referenceBox.globalToLocal(event.position);
           final index = rects.lastIndexWhere((rect) => rect.contains(offset));
 
+          final selectedItem =
+              index == -1 ? null : widget.heatmapData.items[index];
+          widget.onItemSelectedListener(selectedItem);
           setState(() {
             _selectedIndex = index;
           });
@@ -106,13 +116,10 @@ class _HeatmapState extends State<Heatmap> {
 
     for (int i = 0; i < numberOfColorClasses; i++) {
       if (value < classSize + (i * classSize)) {
-        print('value: $value -> ${widget.heatmapData.colorPalette[i]}');
         return widget.heatmapData.colorPalette[i];
       }
     }
 
-    print(
-        'value: $value, min: $min, max: $max -> ${widget.heatmapData.colorPalette[0]}');
     return widget.heatmapData.colorPalette.first;
   }
 }
