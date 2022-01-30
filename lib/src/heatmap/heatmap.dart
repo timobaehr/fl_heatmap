@@ -46,69 +46,96 @@ class _HeatmapState extends State<Heatmap> {
 
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(builder: (context, constraints) {
-      final fullWidth = constraints.maxWidth;
+    const double marginTop = 10;
+    const double marginLeft = 10;
+    const double marginRight = 10;
 
-      final int rows = widget.heatmapData.rows.length;
-      final int columns = widget.heatmapData.columns.length;
+    return Row(
+      children: [
+        const SizedBox(
+          width: marginLeft,
+        ),
 
-      const double marginTop = 10;
-      const double marginLeft = 10;
-      const double marginRight = 10;
-      final double spaceForRects = fullWidth - marginLeft - marginRight;
-      final double spaceForRectWithMargins =
-          (spaceForRects + (spaceForRects / columns * 0.10)) / columns;
+        /// Invisible y-axis labels
+        Opacity(
+          opacity: 0.5,
+          child: Column(
+            children: [
+              for (final rowLabel in widget.heatmapData.rows)
+                RowLabel(rowLabel),
+            ],
+          ),
+        ),
 
-      final double sizeOfRect = spaceForRectWithMargins * 0.90;
-      final double margin = spaceForRectWithMargins * 0.10;
+        /// The heatmap
+        Expanded(child: LayoutBuilder(builder: (context, constraints) {
+          final fullWidth = constraints.maxWidth;
 
-      final List<Rect> rects = [
-        for (int row = 0; row < rows; row++)
-          for (int col = 0; col < columns; col++)
-            Rect.fromLTWH(
-                marginLeft + sizeOfRect * col + margin * col,
-                marginTop + sizeOfRect * row + margin * row,
-                sizeOfRect,
-                sizeOfRect),
-      ];
-      final List<Color> rectColors = [
-        for (final heatmapItem in widget.heatmapData.items)
-          valueToColor(heatmapItem.value),
-      ];
-      final usedHeight = marginTop + sizeOfRect * rows + margin * rows;
+          final int rows = widget.heatmapData.rows.length;
+          final int columns = widget.heatmapData.columns.length;
 
-      final listener = Listener(
-        onPointerDown: (PointerDownEvent event) {
-          /// find the clicked cell
-          final RenderBox referenceBox =
-              context.findRenderObject() as RenderBox;
-          final Offset offset = referenceBox.globalToLocal(event.position);
-          final index = rects.lastIndexWhere((rect) => rect.contains(offset));
+          // TODO: Add space for y axis labels
 
-          final selectedItem =
-              index == -1 ? null : widget.heatmapData.items[index];
-          widget.onItemSelectedListener(selectedItem);
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-        child: CustomPaint(
-            painter: HeatmapPainter(
-              /// Needs all clickable childs as argument
-              rects: rects,
-              rectColors: rectColors,
-              selectedIndex: _selectedIndex,
-              selectedColor: widget.heatmapData.selectedColor,
-            ),
-            child: ConstrainedBox(
-              constraints: const BoxConstraints.expand(),
-            )),
-      );
-      return SizedBox(
-        height: usedHeight,
-        child: listener,
-      );
-    });
+          final double spaceForRects = fullWidth;
+          final double spaceForRectWithMargins =
+              (spaceForRects + (spaceForRects / columns * 0.10)) / columns;
+
+          final double sizeOfRect = spaceForRectWithMargins * 0.90;
+          final double margin = spaceForRectWithMargins * 0.10;
+
+          final List<Rect> rects = [
+            for (int row = 0; row < rows; row++)
+              for (int col = 0; col < columns; col++)
+                Rect.fromLTWH(
+                    sizeOfRect * col + margin * col,
+                    marginTop + sizeOfRect * row + margin * row,
+                    sizeOfRect,
+                    sizeOfRect),
+          ];
+          final List<Color> rectColors = [
+            for (final heatmapItem in widget.heatmapData.items)
+              valueToColor(heatmapItem.value),
+          ];
+          final usedHeight = marginTop + sizeOfRect * rows + margin * rows;
+
+          final listener = Listener(
+            onPointerDown: (PointerDownEvent event) {
+              /// find the clicked cell
+              final RenderBox referenceBox =
+                  context.findRenderObject() as RenderBox;
+              final Offset offset = referenceBox.globalToLocal(event.position);
+              final index =
+                  rects.lastIndexWhere((rect) => rect.contains(offset));
+
+              final selectedItem =
+                  index == -1 ? null : widget.heatmapData.items[index];
+              widget.onItemSelectedListener(selectedItem);
+              setState(() {
+                _selectedIndex = index;
+              });
+            },
+            child: CustomPaint(
+                painter: HeatmapPainter(
+                  /// Needs all clickable childs as argument
+                  rects: rects,
+                  rectColors: rectColors,
+                  selectedIndex: _selectedIndex,
+                  selectedColor: widget.heatmapData.selectedColor,
+                ),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints.expand(),
+                )),
+          );
+          return SizedBox(
+            height: usedHeight,
+            child: listener,
+          );
+        })),
+        const SizedBox(
+          width: marginRight,
+        ),
+      ],
+    );
   }
 
   Color valueToColor(double value) {
@@ -127,5 +154,16 @@ class _HeatmapState extends State<Heatmap> {
     }
 
     return widget.heatmapData.colorPalette.first;
+  }
+}
+
+class RowLabel extends StatelessWidget {
+  const RowLabel(this.text, {Key? key}) : super(key: key);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(padding: const EdgeInsets.only(right: 8), child: Text(text));
   }
 }
