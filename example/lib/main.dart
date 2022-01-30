@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Heatmap plugin example app'),
         ),
-        body: const Heatmap(),
+        body: const Heatmap(heatmapData: HeatmapData(rows: 4, columns: 12)),
       ),
     );
   }
