@@ -61,6 +61,12 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final title = selectedItem != null
+        ? '${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}'
+        : '--- ${heatmapData.items.first.unit}';
+    final subtitle = selectedItem != null
+        ? '${selectedItem!.xAxisLabel} ${selectedItem!.yAxisLabel}'
+        : '---';
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
@@ -70,12 +76,9 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              if (selectedItem != null)
-                Text(
-                    '${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}',
-                    textScaleFactor: 1.4),
-              if (selectedItem != null)
-                Text('${selectedItem!.xAxisLabel} ${selectedItem!.yAxisLabel}'),
+              Text(title, textScaleFactor: 1.4),
+              Text(subtitle),
+              const SizedBox(height: 8),
               Heatmap(
                   onItemSelectedListener: (HeatmapItem? selectedItem) {
                     debugPrint(

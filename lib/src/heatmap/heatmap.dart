@@ -23,6 +23,7 @@ class _HeatmapState extends State<Heatmap> {
   int? _selectedIndex;
   double min = 0;
   double max = 0;
+  double boxHeightWithMargin = 10;
 
   @override
   void initState() {
@@ -46,25 +47,22 @@ class _HeatmapState extends State<Heatmap> {
 
   @override
   Widget build(BuildContext context) {
-    const double marginTop = 10;
     const double marginLeft = 10;
     const double marginRight = 10;
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(
           width: marginLeft,
         ),
 
         /// Invisible y-axis labels
-        Opacity(
-          opacity: 0.5,
-          child: Column(
-            children: [
-              for (final rowLabel in widget.heatmapData.rows)
-                RowLabel(rowLabel),
-            ],
-          ),
+        Column(
+          children: [
+            for (final rowLabel in widget.heatmapData.rows)
+              RowLabel(rowLabel, height: 30),
+          ],
         ),
 
         /// The heatmap
@@ -74,29 +72,30 @@ class _HeatmapState extends State<Heatmap> {
           final int rows = widget.heatmapData.rows.length;
           final int columns = widget.heatmapData.columns.length;
 
-          // TODO: Add space for y axis labels
-
           final double spaceForRects = fullWidth;
           final double spaceForRectWithMargins =
               (spaceForRects + (spaceForRects / columns * 0.10)) / columns;
 
           final double sizeOfRect = spaceForRectWithMargins * 0.90;
           final double margin = spaceForRectWithMargins * 0.10;
+          if (boxHeightWithMargin != sizeOfRect + margin) {
+            boxHeightWithMargin = sizeOfRect + margin;
+            Future.delayed(const Duration(milliseconds: 0), () {
+              setState(() {});
+            });
+          }
 
           final List<Rect> rects = [
             for (int row = 0; row < rows; row++)
               for (int col = 0; col < columns; col++)
-                Rect.fromLTWH(
-                    sizeOfRect * col + margin * col,
-                    marginTop + sizeOfRect * row + margin * row,
-                    sizeOfRect,
-                    sizeOfRect),
+                Rect.fromLTWH(sizeOfRect * col + margin * col,
+                    sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect),
           ];
           final List<Color> rectColors = [
             for (final heatmapItem in widget.heatmapData.items)
               valueToColor(heatmapItem.value),
           ];
-          final usedHeight = marginTop + sizeOfRect * rows + margin * rows;
+          final usedHeight = sizeOfRect * rows + margin * rows;
 
           final listener = Listener(
             onPointerDown: (PointerDownEvent event) {
@@ -126,9 +125,21 @@ class _HeatmapState extends State<Heatmap> {
                   constraints: const BoxConstraints.expand(),
                 )),
           );
-          return SizedBox(
-            height: usedHeight,
-            child: listener,
+          return Column(
+            children: [
+              SizedBox(
+                height: usedHeight,
+                child: listener,
+              ),
+              Row(
+                children: [
+                  for (int i = 0; i < columns; i++)
+                    RowLabel(widget.heatmapData.columns[i],
+                        width: boxHeightWithMargin -
+                            (i == columns - 1 ? 3.084 : 0)), // TODO: Make fix here!
+                ],
+              )
+            ],
           );
         })),
         const SizedBox(
@@ -158,12 +169,26 @@ class _HeatmapState extends State<Heatmap> {
 }
 
 class RowLabel extends StatelessWidget {
-  const RowLabel(this.text, {Key? key}) : super(key: key);
+  const RowLabel(this.text, {Key? key, this.height, this.width})
+      : super(key: key);
 
   final String text;
 
+  final double? height, width;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: const EdgeInsets.only(right: 8), child: Text(text));
+    return SizedBox(
+        height: height,
+        width: width,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                text,
+                style: Theme.of(context).textTheme.caption,
+              )),
+        ));
   }
 }
