@@ -136,7 +136,9 @@ class _HeatmapState extends State<Heatmap> {
                   for (int i = 0; i < columns; i++)
                     RowLabel(widget.heatmapData.columns[i],
                         width: boxHeightWithMargin -
-                            (i == columns - 1 ? 3.084 : 0)), // TODO: Make fix here!
+                            (i == columns - 1
+                                ? 3.084
+                                : 0)), // TODO: Make fix here!
                 ],
               )
             ],
