@@ -137,8 +137,9 @@ class _HeatmapState extends State<Heatmap> {
                     RowLabel(widget.heatmapData.columns[i],
                         width: boxHeightWithMargin -
                             (i == columns - 1
-                                ? 3.084
-                                : 0)), // TODO: Make fix here!
+                                ? boxHeightWithMargin *
+                                    0.1 // size of one margin
+                                : 0)),
                 ],
               )
             ],
@@ -181,16 +182,15 @@ class RowLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
+        //color: text == 'Dez' ? Colors.pink.shade200 : null,
         height: height,
         width: width,
         child: Align(
-          alignment: Alignment.centerRight,
-          child: Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Text(
-                text,
-                style: Theme.of(context).textTheme.caption,
-              )),
+          alignment: Alignment.center,
+          child: Text(
+            text,
+            style: Theme.of(context).textTheme.caption,
+          ),
         ));
   }
 }
