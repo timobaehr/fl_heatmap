@@ -12,9 +12,14 @@ class Heatmap extends StatefulWidget {
       this.onItemSelectedListener})
       : super(key: key);
 
+  /// The data of the heatmap including color palette
   final HeatmapData heatmapData;
 
-  final bool showXAxisLabels, showYAxisLabels;
+  /// Should the x axis be visible or not
+  final bool showXAxisLabels;
+
+  /// Should the y axis be visible or not
+  final bool showYAxisLabels;
 
   /// [selectedItem] is null if item is unselected
   final Function(HeatmapItem? selectedItem)? onItemSelectedListener;
@@ -98,15 +103,52 @@ class _HeatmapState extends State<Heatmap> {
             });
           }
 
+          int count = 0;
+          // ignore: prefer_function_declarations_over_variables
+          final itemFitsToLabels =
+              (HeatmapItem item, String xAxisLabel, String yAxisLabel) {
+            final result =
+                item.xAxisLabel == xAxisLabel && item.yAxisLabel == yAxisLabel;
+            if (result) {
+              count++;
+            }
+            return result;
+          };
           final List<Rect> rects = [
             for (int row = 0; row < rows; row++)
               for (int col = 0; col < columns; col++)
                 Rect.fromLTWH(sizeOfRect * col + margin * col,
                     sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect),
           ];
-          final List<Color> rectColors = [
-            for (final heatmapItem in widget.heatmapData.items)
-              valueToColor(heatmapItem.value),
+          final List<ViewModelItem> vmItems = [
+            for (int row = 0; row < rows; row++)
+              for (int col = 0; col < columns; col++)
+                if (count < widget.heatmapData.items.length &&
+                    itemFitsToLabels(
+                        widget.heatmapData.items[count],
+                        widget.heatmapData.columns[col],
+                        widget.heatmapData.rows[row]))
+                  ViewModelItem(
+                      item: widget.heatmapData.items[count - 1],
+                      colorPalette: widget.heatmapData.colorPalette,
+                      min: min,
+                      max: max,
+                      rect: Rect.fromLTWH(
+                          sizeOfRect * col + margin * col,
+                          sizeOfRect * row + margin * row,
+                          sizeOfRect,
+                          sizeOfRect))
+                else
+                  ViewModelItem(
+                      item: null,
+                      colorPalette: widget.heatmapData.colorPalette,
+                      min: min,
+                      max: max,
+                      rect: Rect.fromLTWH(
+                          sizeOfRect * col + margin * col,
+                          sizeOfRect * row + margin * row,
+                          sizeOfRect,
+                          sizeOfRect)),
           ];
           final usedHeight = sizeOfRect * rows + margin * rows;
 
@@ -123,18 +165,18 @@ class _HeatmapState extends State<Heatmap> {
               final index =
                   rects.lastIndexWhere((rect) => rect.contains(offset));
 
-              final selectedItem =
-                  index == -1 ? null : widget.heatmapData.items[index];
-              widget.onItemSelectedListener!(selectedItem);
+              final selectedItem = index == -1 || index > vmItems.length - 1
+                  ? null
+                  : vmItems[index];
+              widget.onItemSelectedListener!(selectedItem?.item);
               setState(() {
-                _selectedIndex = index;
+                _selectedIndex = selectedItem?.item == null ? null : index;
               });
             },
             child: CustomPaint(
                 painter: HeatmapPainter(
                   /// Needs all clickable childs as argument
-                  rects: rects,
-                  rectColors: rectColors,
+                  items: vmItems,
                   selectedIndex: _selectedIndex,
                   selectedColor: widget.heatmapData.selectedColor,
                 ),
@@ -169,24 +211,6 @@ class _HeatmapState extends State<Heatmap> {
         ),
       ],
     );
-  }
-
-  Color valueToColor(double value) {
-    final numberOfColorClasses = widget.heatmapData.colorPalette.length;
-
-    /// Create color classing starting and [min] to [max]
-    final diff = max - min;
-    final classSize = diff / numberOfColorClasses;
-
-    for (int i = 0; i < numberOfColorClasses; i++) {
-      if (value <= classSize + (i * classSize)) {
-        return widget.heatmapData.colorPalette[i];
-      } else if (value > (classSize * i) && i == numberOfColorClasses - 1) {
-        return widget.heatmapData.colorPalette.last;
-      }
-    }
-
-    return widget.heatmapData.colorPalette.first;
   }
 }
 

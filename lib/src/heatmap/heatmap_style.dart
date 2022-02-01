@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+const colorPaletteTemperature = [
+  Color(0xff63be7b), // green
+  Color(0xff7ec57c),
+  Color(0xff79c47c),
+  Color(0xffa0d07e),
+  Color(0xffb2d57f),
+  Color(0xffe1e282), // yellow
+  Color(0xfffdc17c),
+  Color(0xfffcae78),
+  Color(0xfffa8270),
+  Color(0xfffa8270),
+  Color(0xfff8696b), //red
+];
+
 // Material red 100, 200, ..., 800, 900
 const colorPaletteRed = [
   Color(0xffF5F5F5), // 0

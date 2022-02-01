@@ -12,7 +12,7 @@ Add it to your package's pubspec.yaml file
 
 ```yml
 dependencies:
-  fl_heatmap: ^0.0.1
+  fl_heatmap: ^0.0.2
 ```
 
 
@@ -26,6 +26,7 @@ flutter packages get
 
 ### 3 - Use it
 
+This is an example for the months of four years:
 ```dart
 class _ExampleState extends State<ExampleApp> {
   HeatmapItem? selectedItem;
@@ -110,12 +111,38 @@ class _ExampleState extends State<ExampleApp> {
 }
 ```
 
+If nessecary you can inherit from `HeatmapItem` and attach some payload, e.g. the electricity costs for the consumption:
+
+```dart
+class CustomHeatmapItem extends HeatmapItem {
+  CustomHeatmapItem(
+      {required this.costs,
+      required double value,
+      required String unit,
+      required String xAxisLabel,
+      required String yAxisLabel})
+      : super(
+            value: value,
+            unit: unit,
+            xAxisLabel: xAxisLabel,
+            yAxisLabel: yAxisLabel);
+  
+  final double costs;
+}
+```
+
+## Features
+
+* Supporting custom color schemes with dynamic size or use predefined color palettes 
+  inside `colorPaletteTemperature`, `colorPaletteRed`, `colorPaletteBlue`.
+* x- and y-axis labels are completely dynamic
+* Do not show the x-axis/y-axis labels if necessary 
+* Detect clicks on cells and get back the data item to show detailed information about the cell
+
 ## Getting Started
 
 This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/),
-a specialized package that includes platform-specific implementation code for
-Android and/or iOS.
+[plug-in package](https://flutter.dev/developing-packages/) for all platforms without platform-specific implementation code.
 
 For help getting started with Flutter, view our
 [online documentation](https://flutter.dev/docs), which offers tutorials,

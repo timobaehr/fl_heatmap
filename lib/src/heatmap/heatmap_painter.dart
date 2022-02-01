@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'heatmap_data.dart';
+
 class HeatmapPainter extends CustomPainter {
   HeatmapPainter(
-      {required this.rects,
-      required this.rectColors,
+      {required this.items,
       required this.selectedIndex,
-      required this.selectedColor}) {
-    assert(rects.length == rectColors.length);
-  }
+      required this.selectedColor});
 
-  final List<Rect> rects;
-
-  final List<Color> rectColors;
+  final List<ViewModelItem> items;
 
   final int? selectedIndex;
 
@@ -55,10 +52,10 @@ class HeatmapPainter extends CustomPainter {
     ///    obtain the correct rendering size.
 
     final paintSelected = Paint()..color = selectedColor;
-    for (int i = 0; i < rects.length; i++) {
-      final rect = rects[i];
+    for (int i = 0; i < items.length; i++) {
+      final rect = items[i].rect;
       if (i == selectedIndex) {
-        final paint = Paint()..color = rectColors[i];
+        final paint = Paint()..color = items[i].color;
         canvas.drawRect(rect, paintSelected);
         canvas.drawRect(
             Rect.fromLTWH(
@@ -69,7 +66,7 @@ class HeatmapPainter extends CustomPainter {
             paint);
       } else {
         final paint = Paint()
-          ..color = rectColors.length == i ? Colors.transparent : rectColors[i];
+          ..color = items.length == i ? Colors.transparent : items[i].color;
         canvas.drawRect(rect, paint);
       }
     }
@@ -103,5 +100,47 @@ class HeatmapPainter extends CustomPainter {
     ///
     /// The `oldDelegate` argument will never be null.
     return oldDelegate.selectedIndex != selectedIndex;
+  }
+}
+
+class ViewModelItem {
+  const ViewModelItem({
+    required this.item,
+    required this.rect,
+    required this.colorPalette,
+    required this.min,
+    required this.max,
+  });
+
+  final HeatmapItem? item;
+
+  final List<Color> colorPalette;
+
+  final double min;
+  final double max;
+
+  final Rect rect;
+
+  Color get color => _valueToColor(item?.value);
+
+  Color _valueToColor(double? value) {
+    if (value == null) {
+      return Colors.transparent;
+    }
+    final numberOfColorClasses = colorPalette.length;
+
+    /// Create color classing starting and [min] to [max]
+    final diff = max - min;
+    final classSize = diff / numberOfColorClasses;
+
+    for (int i = 0; i < numberOfColorClasses; i++) {
+      if (value <= classSize + (i * classSize)) {
+        return colorPalette[i];
+      } else if (value > (classSize * i) && i == numberOfColorClasses - 1) {
+        return colorPalette.last;
+      }
+    }
+
+    return colorPalette.first;
   }
 }

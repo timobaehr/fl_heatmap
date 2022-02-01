@@ -17,7 +17,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   HeatmapItem? selectedItem;
 
-  late HeatmapData heatmapData;
+  late HeatmapData heatmapDataPower;
 
   @override
   void initState() {
@@ -48,14 +48,17 @@ class _MyAppState extends State<MyApp> {
     ];
     final r = Random();
     const String unit = 'kWh';
-    heatmapData = HeatmapData(rows: rows, columns: columns, items: [
+    heatmapDataPower = HeatmapData(rows: rows, columns: columns, items: [
       for (int row = 0; row < rows.length; row++)
         for (int col = 0; col < columns.length; col++)
-          HeatmapItem(
-              value: r.nextDouble() * 6,
-              unit: unit,
-              xAxisLabel: columns[col],
-              yAxisLabel: rows[row]),
+          if (!(row == 3 &&
+              col <
+                  2)) // Do not add the very first item (incomplete data edge case)
+            HeatmapItem(
+                value: r.nextDouble() * 6,
+                unit: unit,
+                xAxisLabel: columns[col],
+                yAxisLabel: rows[row]),
     ]);
   }
 
@@ -63,7 +66,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final title = selectedItem != null
         ? '${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}'
-        : '--- ${heatmapData.items.first.unit}';
+        : '--- ${heatmapDataPower.items.first.unit}';
     final subtitle = selectedItem != null
         ? '${selectedItem!.xAxisLabel} ${selectedItem!.yAxisLabel}'
         : '---';
@@ -87,7 +90,7 @@ class _MyAppState extends State<MyApp> {
                       this.selectedItem = selectedItem;
                     });
                   },
-                  heatmapData: heatmapData)
+                  heatmapData: heatmapDataPower)
             ],
           ),
         ),
