@@ -1,7 +1,7 @@
 name: fl_heatmap
 description: A heatmap for Flutter apps
 version: 0.0.1
-homepage:
+homepage: https://github.com/timobaehr/fl_heatmap
 
 environment:
   sdk: ">=2.12.0 <3.0.0"

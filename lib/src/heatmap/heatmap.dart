@@ -7,17 +7,23 @@ class Heatmap extends StatefulWidget {
   const Heatmap(
       {Key? key,
       required this.heatmapData,
-      required this.onItemSelectedListener})
+      this.showXAxisLabels = true,
+      this.showYAxisLabels = true,
+      this.onItemSelectedListener})
       : super(key: key);
 
   final HeatmapData heatmapData;
 
+  final bool showXAxisLabels, showYAxisLabels;
+
   /// [selectedItem] is null if item is unselected
-  final Function(HeatmapItem? selectedItem) onItemSelectedListener;
+  final Function(HeatmapItem? selectedItem)? onItemSelectedListener;
 
   @override
   _HeatmapState createState() => _HeatmapState();
 }
+
+const double _borderThicknessInPercent = 0.1;
 
 class _HeatmapState extends State<Heatmap> {
   int? _selectedIndex;
@@ -57,13 +63,17 @@ class _HeatmapState extends State<Heatmap> {
           width: marginLeft,
         ),
 
-        /// Invisible y-axis labels
-        Column(
-          children: [
-            for (final rowLabel in widget.heatmapData.rows)
-              RowLabel(rowLabel, height: 30),
-          ],
-        ),
+        /// y-axis labels
+        if (widget.showYAxisLabels)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              for (final rowLabel in widget.heatmapData.rows)
+                RowLabel(rowLabel,
+                    height: boxHeightWithMargin,
+                    padding: const EdgeInsets.only(right: 4)),
+            ],
+          ),
 
         /// The heatmap
         Expanded(child: LayoutBuilder(builder: (context, constraints) {
@@ -73,11 +83,14 @@ class _HeatmapState extends State<Heatmap> {
           final int columns = widget.heatmapData.columns.length;
 
           final double spaceForRects = fullWidth;
-          final double spaceForRectWithMargins =
-              (spaceForRects + (spaceForRects / columns * 0.10)) / columns;
+          final double spaceForRectWithMargins = (spaceForRects +
+                  (spaceForRects / columns * _borderThicknessInPercent)) /
+              columns;
 
-          final double sizeOfRect = spaceForRectWithMargins * 0.90;
-          final double margin = spaceForRectWithMargins * 0.10;
+          final double sizeOfRect =
+              spaceForRectWithMargins * (1.0 - _borderThicknessInPercent);
+          final double margin =
+              spaceForRectWithMargins * _borderThicknessInPercent;
           if (boxHeightWithMargin != sizeOfRect + margin) {
             boxHeightWithMargin = sizeOfRect + margin;
             Future.delayed(const Duration(milliseconds: 0), () {
@@ -99,6 +112,10 @@ class _HeatmapState extends State<Heatmap> {
 
           final listener = Listener(
             onPointerDown: (PointerDownEvent event) {
+              if (widget.onItemSelectedListener == null) {
+                return;
+              }
+
               /// find the clicked cell
               final RenderBox referenceBox =
                   context.findRenderObject() as RenderBox;
@@ -108,7 +125,7 @@ class _HeatmapState extends State<Heatmap> {
 
               final selectedItem =
                   index == -1 ? null : widget.heatmapData.items[index];
-              widget.onItemSelectedListener(selectedItem);
+              widget.onItemSelectedListener!(selectedItem);
               setState(() {
                 _selectedIndex = index;
               });
@@ -131,17 +148,19 @@ class _HeatmapState extends State<Heatmap> {
                 height: usedHeight,
                 child: listener,
               ),
-              Row(
-                children: [
-                  for (int i = 0; i < columns; i++)
-                    RowLabel(widget.heatmapData.columns[i],
-                        width: boxHeightWithMargin -
-                            (i == columns - 1
-                                ? boxHeightWithMargin *
-                                    0.1 // size of one margin
-                                : 0)),
-                ],
-              )
+              if (widget.showXAxisLabels)
+                Row(
+                  children: [
+                    for (int i = 0; i < columns; i++)
+                      RowLabel(widget.heatmapData.columns[i],
+                          withoutMargin: i == columns - 1,
+                          width: boxHeightWithMargin -
+                              (i == columns - 1
+                                  ? boxHeightWithMargin *
+                                      _borderThicknessInPercent // size of one margin
+                                  : 0)),
+                  ],
+                )
             ],
           );
         })),
@@ -172,12 +191,21 @@ class _HeatmapState extends State<Heatmap> {
 }
 
 class RowLabel extends StatelessWidget {
-  const RowLabel(this.text, {Key? key, this.height, this.width})
+  const RowLabel(this.text,
+      {Key? key,
+      this.height,
+      this.width,
+      this.padding,
+      this.withoutMargin = true})
       : super(key: key);
 
   final String text;
 
+  final bool withoutMargin;
+
   final double? height, width;
+
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -185,11 +213,25 @@ class RowLabel extends StatelessWidget {
         //color: text == 'Dez' ? Colors.pink.shade200 : null,
         height: height,
         width: width,
-        child: Align(
-          alignment: Alignment.center,
-          child: Text(
-            text,
-            style: Theme.of(context).textTheme.caption,
+        child: Padding(
+          padding: EdgeInsets.only(
+              left: padding?.left ?? 0.0,
+              right: padding?.right ??
+                  (width == null
+                      ? 0.0
+                      : withoutMargin
+                          ? 0.0
+                          : width! * _borderThicknessInPercent),
+              top: padding?.top ?? 0.0,
+              bottom: padding?.bottom ?? 0.0),
+          child: Center(
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.clip,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.caption,
+            ),
           ),
         ));
   }
