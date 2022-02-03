@@ -12,7 +12,7 @@ Add it to your package's pubspec.yaml file
 
 ```yml
 dependencies:
-  fl_heatmap: ^0.0.2
+  fl_heatmap: ^0.0.3
 ```
 
 
