@@ -57,18 +57,61 @@ class HeatmapPainter extends CustomPainter {
       if (i == selectedIndex) {
         final paint = Paint()..color = items[i].color;
         canvas.drawRect(rect, paintSelected);
-        canvas.drawRect(
-            Rect.fromLTWH(
-                rect.left + selectedBorderThickness,
-                rect.top + selectedBorderThickness,
-                rect.width - 2 * selectedBorderThickness,
-                rect.height - 2 * selectedBorderThickness),
-            paint);
+        final left = rect.left + selectedBorderThickness;
+        final top = rect.top + selectedBorderThickness;
+        final width = rect.width - 2 * selectedBorderThickness;
+        final height = rect.height - 2 * selectedBorderThickness;
+        canvas.drawRect(Rect.fromLTWH(left, top, width, height), paint);
+        _drawOverlay(
+            style: items[i].style,
+            canvas: canvas,
+            left: left,
+            top: top,
+            width: width,
+            height: height);
       } else {
         final paint = Paint()
           ..color = items.length == i ? Colors.transparent : items[i].color;
         canvas.drawRect(rect, paint);
+        _drawOverlay(
+            style: items[i].style,
+            canvas: canvas,
+            left: rect.left,
+            top: rect.top,
+            width: rect.width,
+            height: rect.height);
       }
+    }
+  }
+
+  void _drawOverlay(
+      {required HeatmapItemStyle? style,
+      required Canvas canvas,
+      required double left,
+      required double top,
+      required double width,
+      required double height}) {
+    switch (style) {
+      case HeatmapItemStyle.filled:
+        break;
+      case HeatmapItemStyle.hatched:
+        final p1 = Offset(left, top);
+        final p2 = Offset(left + width, top + height);
+        final paint = Paint()
+          ..color = const Color(0x88EFEFEF)
+          ..strokeWidth = width * 0.2;
+        canvas.drawLine(p1, p2, paint);
+
+        final p3 = Offset(left + 0.5 * width, top);
+        final p4 = Offset(left + width, top + 0.5 * height);
+        canvas.drawLine(p3, p4, paint);
+
+        final p5 = Offset(left, top + width * 0.5);
+        final p6 = Offset(left + 0.5 * width, top + height);
+        canvas.drawLine(p5, p6, paint);
+        break;
+      default:
+        break;
     }
   }
 
@@ -122,6 +165,8 @@ class ViewModelItem {
   final Rect rect;
 
   Color get color => _valueToColor(item?.value);
+
+  HeatmapItemStyle? get style => item?.style;
 
   Color _valueToColor(double? value) {
     if (value == null) {

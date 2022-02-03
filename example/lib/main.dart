@@ -56,6 +56,9 @@ class _MyAppState extends State<MyApp> {
                   2)) // Do not add the very first item (incomplete data edge case)
             HeatmapItem(
                 value: r.nextDouble() * 6,
+                style: row == 0 && col > 1
+                    ? HeatmapItemStyle.hatched
+                    : HeatmapItemStyle.filled,
                 unit: unit,
                 xAxisLabel: columns[col],
                 yAxisLabel: rows[row]),

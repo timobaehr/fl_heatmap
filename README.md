@@ -12,7 +12,7 @@ Add it to your package's pubspec.yaml file
 
 ```yml
 dependencies:
-  fl_heatmap: ^0.0.3
+  fl_heatmap: ^0.0.4
 ```
 
 
@@ -28,6 +28,8 @@ flutter packages get
 
 This is an example for the months of four years:
 ```dart
+import 'package:fl_heatmap/fl_heatmap.dart';
+
 class _ExampleState extends State<ExampleApp> {
   HeatmapItem? selectedItem;
 

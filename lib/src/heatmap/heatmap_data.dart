@@ -28,15 +28,29 @@ class HeatmapData {
 
 class HeatmapItem {
   const HeatmapItem(
-      {required this.value, this.unit, this.xAxisLabel, this.yAxisLabel});
+      {required this.value,
+      this.unit,
+      this.xAxisLabel,
+      this.yAxisLabel,
+      this.style = HeatmapItemStyle.filled});
 
   final double value;
 
   final String? unit;
+
+  final HeatmapItemStyle style;
 
   /// Label on the bottom horizontal axis, e.g. the month
   final String? xAxisLabel;
 
   /// Label on the left vertical axis, e.g. the year
   final String? yAxisLabel;
+}
+
+enum HeatmapItemStyle {
+  /// Completely filled
+  filled,
+
+  /// Hatched: A background with stripes, in German "schraffiert"
+  hatched,
 }
