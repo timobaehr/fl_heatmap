@@ -2,7 +2,9 @@
 
 A heatmap widget for Flutter apps.
 
-![heatmap](https://user-images.githubusercontent.com/13302336/151945676-a5d81296-ef46-4067-9ee5-4c40b6d69e78.png)
+![heatmap electricity consumption](https://user-images.githubusercontent.com/13302336/151945676-a5d81296-ef46-4067-9ee5-4c40b6d69e78.png)
+
+![heatmap water consumption](https://user-images.githubusercontent.com/13302336/152556319-d89cfdf4-71bd-4d34-92a2-9975f6548e8a.png)
 
 ## Usage
 
@@ -12,7 +14,7 @@ Add it to your package's pubspec.yaml file
 
 ```yml
 dependencies:
-  fl_heatmap: ^0.0.4
+  fl_heatmap: ^0.1.0
 ```
 
 
@@ -113,7 +115,7 @@ class _ExampleState extends State<ExampleApp> {
 }
 ```
 
-If nessecary you can inherit from `HeatmapItem` and attach some payload, e.g. the electricity costs for the consumption:
+If necessary you can inherit from `HeatmapItem` and attach some payload, e.g. the electricity costs for the consumption:
 
 ```dart
 class CustomHeatmapItem extends HeatmapItem {
@@ -136,10 +138,11 @@ class CustomHeatmapItem extends HeatmapItem {
 ## Features
 
 * Supporting custom color schemes with dynamic size or use predefined color palettes 
-  inside `colorPaletteTemperature`, `colorPaletteRed`, `colorPaletteBlue`.
+  such as `colorPaletteTemperature`, `colorPaletteRed`, `colorPaletteBlue`.
 * x- and y-axis labels are completely dynamic
 * Do not show the x-axis/y-axis labels if necessary 
 * Detect clicks on cells and get back the data item to show detailed information about the cell
+* Use different styles for the cells if necessary
 
 ## Getting Started
 

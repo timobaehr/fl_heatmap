@@ -99,7 +99,7 @@ class HeatmapPainter extends CustomPainter {
         final p2 = Offset(left + width, top + height);
         final paint = Paint()
           ..color = const Color(0x88EFEFEF)
-          ..strokeWidth = width * 0.2;
+          ..strokeWidth = width * 0.15;
         canvas.drawLine(p1, p2, paint);
 
         final p3 = Offset(left + 0.5 * width, top);
