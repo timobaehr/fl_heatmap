@@ -179,6 +179,7 @@ class _HeatmapState extends State<Heatmap> {
                   items: vmItems,
                   selectedIndex: _selectedIndex,
                   selectedColor: widget.heatmapData.selectedColor,
+                  radius: widget.heatmapData.radius,
                 ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints.expand(),

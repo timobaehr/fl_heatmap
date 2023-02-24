@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'heatmap_style.dart';
 
 class HeatmapData {
-  const HeatmapData(
-      {required this.columns,
-      required this.rows,
-      required this.items,
-      this.selectedColor = Colors.red,
-      this.colorPalette = colorPaletteGreen});
+  const HeatmapData({
+    required this.columns,
+    required this.rows,
+    required this.items,
+    this.selectedColor = Colors.red,
+    this.colorPalette = colorPaletteGreen,
+    this.radius = 0.0,
+  });
 
   final List<String> columns;
   final List<String> rows;
@@ -22,6 +24,9 @@ class HeatmapData {
   final Color selectedColor;
 
   final List<HeatmapItem> items;
+
+  /// Rounded rect with radius or a rect without rounded edges
+  final double radius;
 
   List<Rect> get rects => [];
 }

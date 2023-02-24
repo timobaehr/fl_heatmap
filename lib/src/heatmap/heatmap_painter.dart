@@ -3,16 +3,21 @@ import 'package:flutter/material.dart';
 import 'heatmap_data.dart';
 
 class HeatmapPainter extends CustomPainter {
-  HeatmapPainter(
-      {required this.items,
-      required this.selectedIndex,
-      required this.selectedColor});
+  HeatmapPainter({
+    required this.items,
+    required this.selectedIndex,
+    required this.selectedColor,
+    this.radius = 0.0,
+  });
 
   final List<ViewModelItem> items;
 
   final int? selectedIndex;
 
   final Color selectedColor;
+
+  /// Circular radius for rects
+  final double radius;
 
   static const double selectedBorderThickness = 3;
 
@@ -61,7 +66,10 @@ class HeatmapPainter extends CustomPainter {
         final top = rect.top + selectedBorderThickness;
         final width = rect.width - 2 * selectedBorderThickness;
         final height = rect.height - 2 * selectedBorderThickness;
-        canvas.drawRect(Rect.fromLTWH(left, top, width, height), paint);
+        canvas.drawRect(
+          Rect.fromLTWH(left, top, width, height),
+          paint,
+        );
         _drawOverlay(
             style: items[i].style,
             canvas: canvas,
@@ -72,7 +80,17 @@ class HeatmapPainter extends CustomPainter {
       } else {
         final paint = Paint()
           ..color = items.length == i ? Colors.transparent : items[i].color;
-        canvas.drawRect(rect, paint);
+        if (radius == 0.0) {
+          canvas.drawRect(rect, paint);
+        } else {
+          canvas.drawRRect(
+            RRect.fromRectAndRadius(
+              rect,
+              Radius.circular(radius),
+            ),
+            paint,
+          );
+        }
         _drawOverlay(
             style: items[i].style,
             canvas: canvas,
