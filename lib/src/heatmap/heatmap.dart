@@ -159,11 +159,9 @@ class _HeatmapState extends State<Heatmap> {
               }
 
               /// find the clicked cell
-              final RenderBox referenceBox =
-                  context.findRenderObject() as RenderBox;
+              final RenderBox referenceBox = context.findRenderObject() as RenderBox;
               final Offset offset = referenceBox.globalToLocal(event.position);
-              final index =
-                  rects.lastIndexWhere((rect) => rect.contains(offset));
+              final index = rects.lastIndexWhere((rect) => rect.contains(offset));
 
               final selectedItem = index == -1 || index > vmItems.length - 1
                   ? null
@@ -175,7 +173,7 @@ class _HeatmapState extends State<Heatmap> {
             },
             child: CustomPaint(
                 painter: HeatmapPainter(
-                  /// Needs all clickable childs as argument
+                  /// Needs all clickable children as argument
                   items: vmItems,
                   selectedIndex: _selectedIndex,
                   selectedColor: widget.heatmapData.selectedColor,
@@ -255,7 +253,7 @@ class RowLabel extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.clip,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.caption,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
         ));

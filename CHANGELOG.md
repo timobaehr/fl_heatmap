@@ -1,3 +1,7 @@
+## 0.3.0
+
+* Supporting an optional alternative value that is not used for rect background.
+
 ## 0.2.0
 
 * Add option radius. If client wants to draw rounded rect.

@@ -32,14 +32,20 @@ class HeatmapData {
 }
 
 class HeatmapItem {
-  const HeatmapItem(
-      {required this.value,
-      this.unit,
-      this.xAxisLabel,
-      this.yAxisLabel,
-      this.style = HeatmapItemStyle.filled});
+  const HeatmapItem({
+    required this.value,
+    this.alternativeValue,
+    this.unit,
+    this.xAxisLabel,
+    this.yAxisLabel,
+    this.style = HeatmapItemStyle.filled,
+  });
 
+  /// Value used for cell color
   final double value;
+
+  /// Optional alternative value that is not used for cell color
+  final double? alternativeValue;
 
   final String? unit;
 
