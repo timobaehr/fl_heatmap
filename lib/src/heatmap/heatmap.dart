@@ -220,7 +220,7 @@ class _HeatmapState extends State<Heatmap> {
                 height: usedHeight,
                 child: listener,
               ),
-              if (!showAll && widget.rowsVisible != null)
+              if (!showAll && widget.rowsVisible != null && widget.heatmapData.rows.length > widget.rowsVisible!)
                 Center(
                   child: InkWell(
                       child: widget.showAll ??
