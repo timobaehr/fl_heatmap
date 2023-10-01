@@ -94,8 +94,15 @@ class _HeatmapState extends State<Heatmap> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              for (int i = 0; i < (showAll ? widget.heatmapData.rows.length : widget.rowsVisible!); i++)
-                RowLabel(widget.heatmapData.rows[i], height: boxHeightWithMargin, padding: const EdgeInsets.only(right: 4)),
+              for (int i = 0;
+                  i <
+                      (showAll
+                          ? widget.heatmapData.rows.length
+                          : widget.rowsVisible!);
+                  i++)
+                RowLabel(widget.heatmapData.rows[i],
+                    height: boxHeightWithMargin,
+                    padding: const EdgeInsets.only(right: 4)),
             ],
           ),
 
@@ -103,15 +110,19 @@ class _HeatmapState extends State<Heatmap> {
         Expanded(child: LayoutBuilder(builder: (context, constraints) {
           final fullWidth = constraints.maxWidth;
 
-          final int rows = showAll ? widget.heatmapData.rows.length : widget.rowsVisible!;
+          final int rows =
+              showAll ? widget.heatmapData.rows.length : widget.rowsVisible!;
           final int columns = widget.heatmapData.columns.length;
 
           final double spaceForRects = fullWidth;
-          final double spaceForRectWithMargins =
-              (spaceForRects + (spaceForRects / columns * _borderThicknessInPercent)) / columns;
+          final double spaceForRectWithMargins = (spaceForRects +
+                  (spaceForRects / columns * _borderThicknessInPercent)) /
+              columns;
 
-          final double sizeOfRect = spaceForRectWithMargins * (1.0 - _borderThicknessInPercent);
-          final double margin = spaceForRectWithMargins * _borderThicknessInPercent;
+          final double sizeOfRect =
+              spaceForRectWithMargins * (1.0 - _borderThicknessInPercent);
+          final double margin =
+              spaceForRectWithMargins * _borderThicknessInPercent;
           if (boxHeightWithMargin != sizeOfRect + margin) {
             boxHeightWithMargin = sizeOfRect + margin;
             Future.delayed(const Duration(milliseconds: 0), () {
@@ -121,8 +132,10 @@ class _HeatmapState extends State<Heatmap> {
 
           int count = 0;
           // ignore: prefer_function_declarations_over_variables
-          final itemFitsToLabels = (HeatmapItem item, String xAxisLabel, String yAxisLabel) {
-            final result = item.xAxisLabel == xAxisLabel && item.yAxisLabel == yAxisLabel;
+          final itemFitsToLabels =
+              (HeatmapItem item, String xAxisLabel, String yAxisLabel) {
+            final result =
+                item.xAxisLabel == xAxisLabel && item.yAxisLabel == yAxisLabel;
             if (result) {
               count++;
             }
@@ -131,21 +144,27 @@ class _HeatmapState extends State<Heatmap> {
           final List<Rect> rects = [
             for (int row = 0; row < rows; row++)
               for (int col = 0; col < columns; col++)
-                Rect.fromLTWH(sizeOfRect * col + margin * col, sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect),
+                Rect.fromLTWH(sizeOfRect * col + margin * col,
+                    sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect),
           ];
           final List<ViewModelItem> vmItems = [
             for (int row = 0; row < rows; row++)
               for (int col = 0; col < columns; col++)
                 if (count < widget.heatmapData.items.length &&
                     itemFitsToLabels(
-                        widget.heatmapData.items[count], widget.heatmapData.columns[col], widget.heatmapData.rows[row]))
+                        widget.heatmapData.items[count],
+                        widget.heatmapData.columns[col],
+                        widget.heatmapData.rows[row]))
                   ViewModelItem(
                       item: widget.heatmapData.items[count - 1],
                       colorPalette: widget.heatmapData.colorPalette,
                       min: min,
                       max: max,
                       rect: Rect.fromLTWH(
-                          sizeOfRect * col + margin * col, sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect))
+                          sizeOfRect * col + margin * col,
+                          sizeOfRect * row + margin * row,
+                          sizeOfRect,
+                          sizeOfRect))
                 else
                   ViewModelItem(
                       item: null,
@@ -153,7 +172,10 @@ class _HeatmapState extends State<Heatmap> {
                       min: min,
                       max: max,
                       rect: Rect.fromLTWH(
-                          sizeOfRect * col + margin * col, sizeOfRect * row + margin * row, sizeOfRect, sizeOfRect)),
+                          sizeOfRect * col + margin * col,
+                          sizeOfRect * row + margin * row,
+                          sizeOfRect,
+                          sizeOfRect)),
           ];
           final usedHeight = (sizeOfRect + margin) * rows;
 
@@ -164,11 +186,15 @@ class _HeatmapState extends State<Heatmap> {
               }
 
               /// find the clicked cell
-              final RenderBox referenceBox = context.findRenderObject() as RenderBox;
+              final RenderBox referenceBox =
+                  context.findRenderObject() as RenderBox;
               final Offset offset = referenceBox.globalToLocal(event.position);
-              final index = rects.lastIndexWhere((rect) => rect.contains(offset));
+              final index =
+                  rects.lastIndexWhere((rect) => rect.contains(offset));
 
-              final selectedItem = index == -1 || index > vmItems.length - 1 ? null : vmItems[index];
+              final selectedItem = index == -1 || index > vmItems.length - 1
+                  ? null
+                  : vmItems[index];
               widget.onItemSelectedListener!(selectedItem?.item);
               setState(() {
                 _selectedIndex = selectedItem?.item == null ? null : index;
@@ -194,10 +220,15 @@ class _HeatmapState extends State<Heatmap> {
               ),
               if (!showAll && widget.rowsVisible != null)
                 Center(
-                  child: InkWell(child: widget.showAll ?? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                    child: Text(widget.showAllButtonText.toUpperCase(), style: Theme.of(context).textTheme.titleMedium),
-                  ), onTap: _onShowAllPressed),
+                  child: InkWell(
+                      child: widget.showAll ??
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4, horizontal: 16),
+                            child: Text(widget.showAllButtonText.toUpperCase(),
+                                style: Theme.of(context).textTheme.titleMedium),
+                          ),
+                      onTap: _onShowAllPressed),
                 ),
               if (widget.showXAxisLabels)
                 Row(
@@ -207,7 +238,8 @@ class _HeatmapState extends State<Heatmap> {
                           withoutMargin: i == columns - 1,
                           width: boxHeightWithMargin -
                               (i == columns - 1
-                                  ? boxHeightWithMargin * _borderThicknessInPercent // size of one margin
+                                  ? boxHeightWithMargin *
+                                      _borderThicknessInPercent // size of one margin
                                   : 0)),
                   ],
                 )
@@ -229,7 +261,12 @@ class _HeatmapState extends State<Heatmap> {
 }
 
 class RowLabel extends StatelessWidget {
-  const RowLabel(this.text, {Key? key, this.height, this.width, this.padding, this.withoutMargin = true})
+  const RowLabel(this.text,
+      {Key? key,
+      this.height,
+      this.width,
+      this.padding,
+      this.withoutMargin = true})
       : super(key: key);
 
   final String text;

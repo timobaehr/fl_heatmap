@@ -56,10 +56,14 @@ class _MyAppState extends State<MyApp> {
     final items = [
       for (int row = 0; row < rows.length; row++)
         for (int col = 0; col < columns.length; col++)
-          if (!(row == 3 && col < 2)) // Do not add the very first item (incomplete data edge case)
+          if (!(row == 3 &&
+              col <
+                  2)) // Do not add the very first item (incomplete data edge case)
             HeatmapItem(
                 value: r.nextDouble() * 6,
-                style: row == 0 && col > 1 ? HeatmapItemStyle.hatched : HeatmapItemStyle.filled,
+                style: row == 0 && col > 1
+                    ? HeatmapItemStyle.hatched
+                    : HeatmapItemStyle.filled,
                 unit: unit,
                 xAxisLabel: columns[col],
                 yAxisLabel: rows[row]),
@@ -77,7 +81,9 @@ class _MyAppState extends State<MyApp> {
     final title = selectedItem != null
         ? '${selectedItem!.value.toStringAsFixed(2)} ${selectedItem!.unit}'
         : '--- ${heatmapDataPower.items.first.unit}';
-    final subtitle = selectedItem != null ? '${selectedItem!.xAxisLabel} ${selectedItem!.yAxisLabel}' : '---';
+    final subtitle = selectedItem != null
+        ? '${selectedItem!.xAxisLabel} ${selectedItem!.yAxisLabel}'
+        : '---';
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(

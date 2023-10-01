@@ -146,12 +146,3 @@ class CustomHeatmapItem extends HeatmapItem {
 * Use different styles for the cells if necessary
 * Show only the first lines and user can request to show all
 
-## Getting Started
-
-This project is a starting point for a Flutter
-[plug-in package](https://flutter.dev/developing-packages/) for all platforms without platform-specific implementation code.
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-
