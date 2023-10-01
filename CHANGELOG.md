@@ -1,4 +1,4 @@
-## 0.4.0
+## 0.4.1
 
 * A heatmap can have a lot of rows under certain circumstances. This update 
   brings the possibility that only the first lines can be displayed and the 

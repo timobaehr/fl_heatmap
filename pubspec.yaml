@@ -1,6 +1,6 @@
 name: fl_heatmap
 description: A heatmap widget for Flutter apps with various styling options.
-version: 0.4.0
+version: 0.4.1
 homepage: https://github.com/timobaehr/fl_heatmap
 
 environment:

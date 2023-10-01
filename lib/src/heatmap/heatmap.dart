@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_heatmap/src/heatmap/heatmap_data.dart';
 import 'package:flutter/material.dart';
 
@@ -47,7 +49,7 @@ const double _borderThicknessInPercent = 0.1;
 
 class _HeatmapState extends State<Heatmap> {
   int? _selectedIndex;
-  double min = 0;
+  double minimum = 0;
   double max = 0;
   double boxHeightWithMargin = 10;
 
@@ -66,7 +68,7 @@ class _HeatmapState extends State<Heatmap> {
       }
     }
     if (min != null && max != null) {
-      this.min = min;
+      this.minimum = min;
       this.max = max;
     }
 
@@ -98,7 +100,7 @@ class _HeatmapState extends State<Heatmap> {
                   i <
                       (showAll
                           ? widget.heatmapData.rows.length
-                          : widget.rowsVisible!);
+                          : min(widget.rowsVisible!, widget.heatmapData.rows.length));
                   i++)
                 RowLabel(widget.heatmapData.rows[i],
                     height: boxHeightWithMargin,
@@ -111,7 +113,7 @@ class _HeatmapState extends State<Heatmap> {
           final fullWidth = constraints.maxWidth;
 
           final int rows =
-              showAll ? widget.heatmapData.rows.length : widget.rowsVisible!;
+              showAll ? widget.heatmapData.rows.length : min(widget.rowsVisible!, widget.heatmapData.rows.length);
           final int columns = widget.heatmapData.columns.length;
 
           final double spaceForRects = fullWidth;
@@ -158,7 +160,7 @@ class _HeatmapState extends State<Heatmap> {
                   ViewModelItem(
                       item: widget.heatmapData.items[count - 1],
                       colorPalette: widget.heatmapData.colorPalette,
-                      min: min,
+                      min: minimum,
                       max: max,
                       rect: Rect.fromLTWH(
                           sizeOfRect * col + margin * col,
@@ -169,7 +171,7 @@ class _HeatmapState extends State<Heatmap> {
                   ViewModelItem(
                       item: null,
                       colorPalette: widget.heatmapData.colorPalette,
-                      min: min,
+                      min: minimum,
                       max: max,
                       rect: Rect.fromLTWH(
                           sizeOfRect * col + margin * col,
