@@ -1,3 +1,9 @@
+## 0.4.0
+
+* A heatmap can have a lot of rows under certain circumstances. This update 
+  brings the possibility that only the first lines can be displayed and the 
+  user can only display the remaining lines if necessary.
+
 ## 0.3.0
 
 * Supporting an optional alternative value that is not used for rect background.

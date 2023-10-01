@@ -105,6 +105,7 @@ class _ExampleState extends State<ExampleApp> {
                       this.selectedItem = selectedItem;
                     });
                   },
+                  rowsVisible: 5, // Only the first 5 rows are visible
                   heatmapData: heatmapData)
             ],
           ),
@@ -143,6 +144,7 @@ class CustomHeatmapItem extends HeatmapItem {
 * Do not show the x-axis/y-axis labels if necessary 
 * Detect clicks on cells and get back the data item to show detailed information about the cell
 * Use different styles for the cells if necessary
+* Show only the first lines and user can request to show all
 
 ## Getting Started
 
