@@ -1,3 +1,7 @@
+## 0.4.3
+
+* Use less often first value of colorPalette, only for 0
+
 ## 0.4.2
 
 * A heatmap can have a lot of rows under certain circumstances. This update 

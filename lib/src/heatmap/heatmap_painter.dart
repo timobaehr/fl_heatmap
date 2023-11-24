@@ -196,8 +196,11 @@ class ViewModelItem {
     final diff = max - min;
     final classSize = diff / numberOfColorClasses;
 
-    if (value == min) {
+    if (value == 0 && numberOfColorClasses > 4) {
       return colorPalette[0];
+    }
+    if (value == min && numberOfColorClasses > 1) {
+      return colorPalette[1];
     }
     for (int i = 1; i < numberOfColorClasses; i++) {
       if (value <= min + (i * classSize)) {
