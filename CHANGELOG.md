@@ -1,4 +1,4 @@
-## 0.4.3
+## 0.4.4
 
 * Use less often first value of colorPalette, only for 0
 

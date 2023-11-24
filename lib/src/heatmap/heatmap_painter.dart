@@ -196,7 +196,7 @@ class ViewModelItem {
     final diff = max - min;
     final classSize = diff / numberOfColorClasses;
 
-    if (value == 0 && numberOfColorClasses > 4) {
+    if (value == 0 && numberOfColorClasses > 4 && min == 0) {
       return colorPalette[0];
     }
     if (value == min && numberOfColorClasses > 1) {
