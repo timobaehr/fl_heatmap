@@ -146,3 +146,8 @@ class CustomHeatmapItem extends HeatmapItem {
 * Use different styles for the cells if necessary
 * Show only the first lines and user can request to show all
 
+## Apps using this plugin
+
+| [EHW+](https://ehwplus.web.app) | Your app? |
+|---|---|
+| ![EHW+](https://play-lh.googleusercontent.com/TDPCEwTmGEootK5VnPLu94AZ4Ks4-eTa_sg9IoLqWOk_aBr-OxjkfKe2s0OkvLgWKNc_=w100-rw)| ... |

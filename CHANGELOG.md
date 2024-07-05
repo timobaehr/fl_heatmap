@@ -1,3 +1,7 @@
+## 0.4.5
+
+* Internal changes only inside package: formatting
+
 ## 0.4.4
 
 * Use less often first value of colorPalette, only for 0

@@ -100,7 +100,8 @@ class _HeatmapState extends State<Heatmap> {
                   i <
                       (showAll
                           ? widget.heatmapData.rows.length
-                          : min(widget.rowsVisible!, widget.heatmapData.rows.length));
+                          : min(widget.rowsVisible!,
+                              widget.heatmapData.rows.length));
                   i++)
                 RowLabel(widget.heatmapData.rows[i],
                     height: boxHeightWithMargin,
@@ -112,8 +113,9 @@ class _HeatmapState extends State<Heatmap> {
         Expanded(child: LayoutBuilder(builder: (context, constraints) {
           final fullWidth = constraints.maxWidth;
 
-          final int rows =
-              showAll ? widget.heatmapData.rows.length : min(widget.rowsVisible!, widget.heatmapData.rows.length);
+          final int rows = showAll
+              ? widget.heatmapData.rows.length
+              : min(widget.rowsVisible!, widget.heatmapData.rows.length);
           final int columns = widget.heatmapData.columns.length;
 
           final double spaceForRects = fullWidth;
@@ -220,7 +222,9 @@ class _HeatmapState extends State<Heatmap> {
                 height: usedHeight,
                 child: listener,
               ),
-              if (!showAll && widget.rowsVisible != null && widget.heatmapData.rows.length > widget.rowsVisible!)
+              if (!showAll &&
+                  widget.rowsVisible != null &&
+                  widget.heatmapData.rows.length > widget.rowsVisible!)
                 Center(
                   child: InkWell(
                       child: widget.showAll ??
