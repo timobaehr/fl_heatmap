@@ -1,3 +1,8 @@
+## 0.4.6
+
+* Add == and hashCode implementation for HeatmapData
+* Minimum dart version is 2.14.0 now
+
 ## 0.4.5
 
 * Internal changes only inside package: formatting

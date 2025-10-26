@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'heatmap_style.dart';
@@ -29,6 +30,30 @@ class HeatmapData {
   final double radius;
 
   List<Rect> get rects => [];
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+
+    return other is HeatmapData &&
+        listEquals(other.columns, columns) &&
+        listEquals(other.rows, rows) &&
+        listEquals(other.colorPalette, colorPalette) &&
+        other.selectedColor == selectedColor &&
+        listEquals(other.items, items) &&
+        other.radius == radius;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        Object.hashAll(columns),
+        Object.hashAll(rows),
+        Object.hashAll(colorPalette),
+        selectedColor,
+        Object.hashAll(items),
+        radius,
+      );
 }
 
 class HeatmapItem {
@@ -56,6 +81,30 @@ class HeatmapItem {
 
   /// Label on the left vertical axis, e.g. the year
   final String? yAxisLabel;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other.runtimeType != runtimeType) return false;
+
+    return other is HeatmapItem &&
+        other.value == value &&
+        other.alternativeValue == alternativeValue &&
+        other.unit == unit &&
+        other.style == style &&
+        other.xAxisLabel == xAxisLabel &&
+        other.yAxisLabel == yAxisLabel;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        value,
+        alternativeValue,
+        unit,
+        style,
+        xAxisLabel,
+        yAxisLabel,
+      );
 }
 
 enum HeatmapItemStyle {

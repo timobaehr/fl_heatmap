@@ -68,7 +68,7 @@ class _HeatmapState extends State<Heatmap> {
       }
     }
     if (min != null && max != null) {
-      this.minimum = min;
+      minimum = min;
       this.max = max;
     }
 
