@@ -92,7 +92,7 @@ class _MyAppState extends State<MyApp> {
           child: Column(
             children: [
               const SizedBox(height: 16),
-              Text(title, textScaleFactor: 1.4),
+              Text(title, textScaler: MediaQuery.textScalerOf(context)),
               Text(subtitle),
               const SizedBox(height: 8),
               Heatmap(
